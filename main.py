@@ -8,7 +8,7 @@ from random import random
 from typing import Dict
 
 devMode = False
-energyLoosesRate = 0.85
+energyLoosesRate = 0.15
 side = 50.0
 table_width = 230  # 129
 table_height = 5
@@ -18,26 +18,38 @@ r = 5
 ballMas = 1
 balls = []
 walls = dict()
+coordinates_objects = []
 side = side - thinkness * 0.5 - r
 maxTime = 100
 
+def set_visible_coordinate_system(is_visible):
+    for obj in coordinates_objects:
+        obj.visible = is_visible
 
 def initialize_coordinate_system():
     x_box = box(pos=vector(0, 0, 0), size=vector(300, 10, 10), color=color.purple)
-    x_lebel = label(pos=x_box.size / 2, text="X", xoffset=-10,
+    x_label = label(pos=x_box.size / 2, text="X", xoffset=-10,
                     yoffset=-10, space=0,
                     height=16, border=4,
                     font='sans', color=color.white)
     y_box = box(pos=vector(0, 0, 0), size=vector(10, 300, 10), color=color.cyan)
-    y_lebel = label(pos=y_box.size / 2, text="Y", xoffset=-10,
+    y_label = label(pos=y_box.size / 2, text="Y", xoffset=-10,
                     yoffset=-10, space=0,
                     height=16, border=4,
                     font='sans', color=color.white)
+
     z_box = box(pos=vector(0, 0, 0), size=vector(10, 10, 300), color=color.white)
-    z_lebel = label(pos=z_box.size / 2, text="Z", xoffset=-10,
+    z_label = label(pos=z_box.size / 2, text="Z", xoffset=-10,
                     yoffset=-10, space=0,
                     height=16, border=4,
                     font='sans', color=color.white)
+    coordinates_objects.append(x_label)
+    coordinates_objects.append(x_box)
+    coordinates_objects.append(y_box)
+    coordinates_objects.append(y_label)
+    coordinates_objects.append(z_box)
+    coordinates_objects.append(z_label)
+
 
 
 def initializeWalls(walls_dict: Dict[str, box]):
@@ -241,7 +253,7 @@ def moveWhile():
     scene.camera.pos = camera_pos
     initializeWalls(walls)
     initializeBalls(balls)
-
+    set_visible_coordinate_system(False)
     while True:
         rate(330)
         moveBalls(balls, g, dt)
